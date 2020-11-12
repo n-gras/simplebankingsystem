@@ -1,11 +1,27 @@
 import random
 cards = {}
 
+def luhn(number):
+    num = 0
+    for n in range(15):
+        if (n + 1) % 2:
+            num += (int(number[n]) * 2) - 9 if int(number[n]) * 2 > 9 else int(number[n]) * 2
+            print(num)
+        else:
+            num += int(number[n])
+            print(num)
+
+    for n in range(10):
+        if (num + n) % 10 == 0:
+            return n
+
 
 def create_card():
-    account = random.randint(100000000, 999999999)
-    card_number = f'400000{account}1'
-    card_pin = random.randint(1000, 9999)
+    bin = '400000'
+    account = str(random.randint(0, 999999999)).rjust(9, '0')
+    checksum = luhn(f'{bin}{account}')
+    card_number = f'{bin}{account}{checksum}'
+    card_pin = str(random.randint(0, 9999)).rjust(4, '0')
     # card = card_number, card_pin
     cards[card_number] = card_pin
     # print(cards)
@@ -16,13 +32,12 @@ def create_card():
 
 def check_card():
     card_number = str(input('Enter your card number:'))
-    card_pin = int(input('Enter your PIN:'))
+    card_pin = str(input('Enter your PIN:'))
     if card_number in cards.keys():
         # print('right card')
-        if cards[str(card_number)] == card_pin:
+        if cards[card_number] == card_pin:
             # print('right pin')
             return True
-
     return False
 
 
